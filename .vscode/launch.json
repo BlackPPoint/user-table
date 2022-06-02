@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "type": "pwa-chrome",
+          "request": "launch",
+          "name": "Отладка в Chrome",
+          "url": "http://localhost:8080",
+          "webRoot": "${workspaceFolder}",
+          "preLaunchTask": "webpack: devserver"
+      }
+  ]
+}
