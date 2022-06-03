@@ -15,9 +15,14 @@ export const AppLayout = ({ children, actions }: IAppLayoutProps) => {
       <div className="logo" />
       {items.length > 0 && <Menu theme="dark" mode="horizontal" items={items} selectedKeys={[]} />}
     </Layout.Header>
-    <Layout.Content className="app-layout-content">
-      {children}
-    </Layout.Content>
+    <Layout>
+      <Layout.Sider className="app-layout-sider" width={350}>
+        {/* Module Federation */}
+      </Layout.Sider>
+      <Layout.Content className="app-layout-content">
+        {children}
+      </Layout.Content>
+    </Layout>
     <Layout.Footer className="app-layout-footer">
       User Table ©{new Date().getFullYear()} Created by OIS
     </Layout.Footer>
