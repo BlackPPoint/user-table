@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import ResizeObserver from 'rc-resize-observer'
-import { Image, Table, TableColumnsType } from 'antd'
+import { Image, Table, TableColumnsType, Tooltip, Button } from 'antd'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 
 import { IUser } from '../../models'
@@ -8,8 +9,54 @@ import { IUsersTableProps } from './types'
 
 import './users-table.less'
 
-export const UsersTable = ({ loading, users }: IUsersTableProps) => {
+export const UsersTable = ({ loading, users, handleEditButtonClick, handleDeleteButtonClick }: IUsersTableProps) => {
   const [ height, setTableHeight ] = useState(undefined)
+  const columns: TableColumnsType<IUser> = [
+    {
+      dataIndex: 'picture',
+      width: 64,
+      render: ({ thumbnail, large }) => <Image src={thumbnail} preview={{ src: large }} alt="photo" />
+    },
+    {
+      title: 'Имя пользователя',
+      dataIndex: [ 'login', 'username' ]
+    },
+    {
+      title: 'Полное имя',
+      dataIndex: 'name',
+      render: ({ title, first, last }) => `${title} ${first} ${last}`
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email'
+    },
+    {
+      title: 'Телефон',
+      dataIndex: 'cell'
+    },
+    {
+      title: 'Возраст',
+      dataIndex: [ 'dob', 'age' ]
+    },
+    {
+      title: 'Дата регистрации',
+      dataIndex: [ 'registered', 'date' ],
+      render: (date: string) => dayjs(date).format('D MMMM YYYY ')
+    },
+    {
+      title: '',
+      render: (user) => (
+        <>
+          <Tooltip title="Редактировать пользователя">
+            <Button style={{ marginRight: '5px' }} onClick={() => { handleEditButtonClick(user)}} icon={<EditOutlined />} />
+          </Tooltip>
+          <Tooltip title="Удалить пользователя">
+            <Button danger onClick={() => { handleDeleteButtonClick(user)}} icon={<DeleteOutlined />} />
+          </Tooltip>
+        </>
+      )
+    }
+  ]
 
   const heighDelta = 39 // 39 - высота заголовка таблицы
   return <ResizeObserver onResize={({ height: componentHeight }) => setTableHeight(Math.max(0, componentHeight - heighDelta))}>
@@ -22,37 +69,3 @@ export const UsersTable = ({ loading, users }: IUsersTableProps) => {
 }
 
 const keySelector = (user: IUser) => user.login.uuid
-
-const columns: TableColumnsType<IUser> = [
-  {
-    dataIndex: 'picture',
-    width: 64,
-    render: ({ thumbnail, large }) => <Image src={thumbnail} preview={{ src: large }} alt="photo" />
-  },
-  {
-    title: 'Имя пользователя',
-    dataIndex: [ 'login', 'username' ]
-  },
-  {
-    title: 'Полное имя',
-    dataIndex: 'name',
-    render: ({ title, first, last }) => `${title} ${first} ${last}`
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email'
-  },
-  {
-    title: 'Телефон',
-    dataIndex: 'cell'
-  },
-  {
-    title: 'Возраст',
-    dataIndex: [ 'dob', 'age' ]
-  },
-  {
-    title: 'Дата регистрации',
-    dataIndex: [ 'registered', 'date' ],
-    render: (date: string) => dayjs(date).format('D MMMM YYYY ')
-  }
-]
